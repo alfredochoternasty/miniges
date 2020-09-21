@@ -1,0 +1,113 @@
+body
+{
+  margin-left: auto;
+  margin-right: auto;
+  background: #FDFDFF;
+}
+
+header{
+	text-align: -webkit-center;
+  background-color: #fff;
+	height: 70px;
+	padding: 10px;
+}
+
+#logo{
+	margin-left:5%;
+	float:left;
+	font-family: Arial;
+}
+
+#info{
+	margin-right: 5%;
+	margin-top: 10px;
+	float: right;
+	text-align: right;
+	font-family: Arial, sans-serif;
+	font-size: 0.7rem;
+}
+
+.pedidos_nuevos {
+    position: absolute;
+    width: 20px;
+    background-color: red;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+		font-size: large;
+		margin-left: 2px;
+		margin-right: 10px;
+}
+
+.info, .success, .warning, .error, .validation {
+	font-family: verdana;
+	font-weight:bold;
+	border: 1px solid;
+	margin: 10px 0px;
+	padding:15px 10px 15px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+.info {
+	color: #00529B;
+	background-color: #BDE5F8;
+	background-image: url('info.png');
+}
+.success {
+	color: #4F8A10;
+	background-color: #DFF2BF;
+	background-image:url('success.png');
+}
+.warning {
+	color: #9F6000;
+	background-color: #FEEFB3;
+	background-image: url('warning.png');
+}
+.error {
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url('error.png');
+}
+
+#detalle_resumen_nro_lote{
+	font-size:16px;
+}
+
+.sf_admin_form{
+	font-size: 1.3em;
+}
+
+.sf_admin_text, .sf_admin_date {
+	font-size: 1.2em;
+}
+
+.checkbox_list li{margin-left: 50px;}
+#sf_guard_user_permissions_list_50, 
+#sf_guard_user_permissions_list_1010, 
+#sf_guard_user_permissions_list_1060, 
+#sf_guard_user_permissions_list_1090, 
+#sf_guard_user_permissions_list_1170, 
+#sf_guard_user_permissions_list_1230, 
+#sf_guard_user_permissions_list_1310, 
+#sf_guard_user_permissions_list_1150, 
+#sf_guard_user_permissions_list_1305, 
+#sf_guard_user_permissions_list_1360{
+	margin-left: -30px;
+	font-weight: bold;
+}
+#sf_guard_user_permissions_list_50 + label, 
+#sf_guard_user_permissions_list_1010 + label, 
+#sf_guard_user_permissions_list_1060 + label, 
+#sf_guard_user_permissions_list_1090 + label, 
+#sf_guard_user_permissions_list_1170 + label, 
+#sf_guard_user_permissions_list_1230 + label, 
+#sf_guard_user_permissions_list_1310 + label, 
+#sf_guard_user_permissions_list_1150 + label, 
+#sf_guard_user_permissions_list_1305 + label, 
+#sf_guard_user_permissions_list_1360 + label{
+	font-weight: bold;
+	font-size: larger;
+	background-color: #0087ca;
+	padding: 5px;
+	color: #fff;
+}

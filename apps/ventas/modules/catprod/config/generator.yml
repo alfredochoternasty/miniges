@@ -1,0 +1,30 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           Categoria
+    theme:                 jroller
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          categoria
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list:
+        title: Categoria de Grupos de Productos
+        display: [nombre]
+        object_actions:
+          _delete: {label: Eliminar}
+          _edit: {label: Modificar}
+        actions:
+          _new: {label: Nuevo}
+          ver_historico: {label: Ver Ventas Historico}
+          ver_actuales: {label: Ver Ventas Actuales}
+      filter:  ~
+      form:    ~
+      edit:    ~
+      new:     ~

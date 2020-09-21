@@ -1,0 +1,5 @@
+all:
+    is_secure: true
+    credentials: [Productos]
+GetImagen:
+    is_secure: false

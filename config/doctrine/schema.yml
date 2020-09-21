@@ -1,0 +1,1026 @@
+TipoMoneda:
+  connection: doctrine
+  tableName: tipo_moneda
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+    simbolo: {type: string(10)}
+  relations:
+    Resumenes: {type: many, class: Resumen, local: id, foreign: moneda_id}
+    Ventas: {type: many, class: Venta, local: id, foreign: moneda_id}
+    Cobros: {type: many, class: Cobro, local: id, foreign: moneda_id}
+    Compras: {type: many, class: Compra, local: id, foreign: moneda_id}
+    FactCompra: {type: many, class: FactCompra, local: id, foreign: moneda_id}
+    Pagos: {type: many, class: Pago, local: id, foreign: moneda_id}
+TipoVenta:
+  connection: doctrine
+  tableName: tipo_venta
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(255), notnull: true}
+Cuenta:
+  connection: doctrine
+  tableName: cuenta_compras
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+  relations:
+    Compras: {type: many, class: Compras, local: id, foreign: cuenta_id}
+TipoCliente:
+  connection: doctrine
+  tableName: tipo_cliente
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+  relations:
+    Clientes: {type: many, class: Cliente, local: id, foreign: tipo_id}
+Banco:
+  connection: doctrine
+  tableName: banco
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(250), notnull: true}
+  relations:
+    Cobros: {type: many, class: Cobro, local: id, foreign: banco_id}
+    pagos: {type: many, class: Pago, local: id, foreign: banco_id}
+TipoCobroPago:
+  connection: doctrine
+  tableName: tipo_cobro_pago
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+  relations:
+    Cobros: {type: many, class: Cobro, local: id, foreign: tipo_id}
+    pagos: {type: many, class: Pago, local: id, foreign: tipo_id}
+TipoFactura:
+  connection: doctrine
+  tableName: tipo_factura
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+    cod_tipo_afip: {type: integer(4)}
+    letra: {type: string(50)}
+    id_fact_cancela: {type: integer(4)}
+    modelo_impresion: {type: string(50)}
+    cond_fiscales: {type: string(50)}
+  relations:
+    Ventas: {type: many, class: Venta, local: id, foreign: tipofactura_id}
+    Compras: {type: many, class: Compra, local: id, foreign: tipofactura_id}
+CondicionFiscal:
+  connection: doctrine
+  tableName: condicion_fiscal
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+    cod_tipo_afip: {type: integer(4)}
+  relations:
+    Clientes: {type: many, class: Cliente, local: id, foreign: condicionfiscal_id}
+    Proveedores: {type: many, class: Proveedor, local: id, foreign: condicionfiscal_id}
+Cliente:
+  connection: doctrine
+  tableName: cliente
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    tipo_id: {type: integer(4)}
+    dni: {type: string(10)}
+    cuit: {type: string(15)}
+    condicionfiscal_id: {type: integer(4)}
+    genera_comision: {type: boolean, default: 0}
+    sexo: {type: string(1), notnull: true}
+    apellido: {type: string(50), notnull: true}
+    nombre: {type: string(50), notnull: true}
+    fecha_nacimiento: {type: date(25)}
+    domicilio: {type: string(100)}
+    localidad_id: {type: integer(4)}
+    telefono: {type: string(30)}
+    celular: {type: string(30)}
+    fax: {type: string(30)}
+    email: {type: string(100)}
+    observacion: {type: string(200)}
+    usuario_id: {type: integer(4)}
+    lista_id: {type: integer(4), notnull: true}
+    activo: {type: boolean, default: 1}
+    recibir_curso: {type: boolean, default: 1}
+    zona_id: {type: integer(4), notnull: true}
+    nro_matricula: {type: string(255)}
+    foto_matricula: {type: string(255)}
+    modo_alta: {type: string(255)}
+  relations:
+    Resumenes: {type: many, class: Resumen, local: id, foreign: cliente_id}
+    Localidad: {type: one, local: localidad_id, onDelete: RESTRICT}
+    Condfiscal: {type: one, class: CondicionFiscal, local: condicionfiscal_id, onDelete: RESTRICT}
+    Cobros: {type: many, class: Cobro, local: id, foreign: cliente_id}
+    Cuenta: {type: many, class: CtaCte, local: id, foreign: cliente_id}
+    Tipo: {type: one, class: TipoCliente, local: tipo_id, onDelete: RESTRICT}
+    Lista: {type: one, class: ListaPrecio, local: lista_id, foreign: id, onDelete: RESTRICT}
+    Usuario: {type: one, class: sfGuardUser, local: usuario_id}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+    Domicilios: {type: many, class: ClienteDomicilio, local: id, foreign: cliente_id}
+Compra:
+  connection: doctrine
+  tableName: compra
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    cuenta_id: {type: integer(4), notnull: true}
+    tipofactura_id: {type: integer(4), notnull: true}
+    numero: {type: integer(4), notnull: true}
+    fecha: {type: date(25), notnull: true}
+    proveedor_id: {type: integer(4), notnull: true}}
+    moneda_id: {type: integer(4), notnull: true}
+    observacion: {type: string(200)}
+    pagado: {type: integer(1), notnull: true, default: 0}
+    usuario: {type: integer(4)}
+    zona_id: {type: integer(4)}
+    remito_id: {type: integer(4)}
+  relations:
+    Proveedor: {type: one, class: Proveedor, local: proveedor_id}
+    Detalles: {type: many, class: DetalleCompra, local: id, foreign: compra_id}
+    Pagos: {type: many, class: Pago, local: id, foreign: compra_id}
+    Tipofactura: {type: one, class: TipoFactura, local: tipofactura_id, onDelete: RESTRICT}
+    Cuenta: {type: one, class: Cuenta, local: cuenta_id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+    sfGuardUser: {type: one, local: usuario, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+    Remito: {type: one, class: Resumen, local: remito_id}
+DetalleCompra:
+  connection: doctrine
+  tableName: detalle_compra
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    compra_id: {type: integer(4), notnull: true}
+    producto_id: {type: integer(4), notnull: true}
+    precio: {type: 'decimal(10, 2)'}
+    cantidad: {type: integer(4), notnull: true, default: 1}
+    total: {type: 'decimal(10, 2)'}
+    observacion: {type: string(200)}
+    nro_lote: {type: string(255)}
+    fecha_vto: {type: date(25)}
+    iva: {type: 'decimal(10, 2)'}
+    sub_total: {type: 'decimal(10, 2)'}
+    trazable: {type: boolean}
+    usuario: {type: integer(4)}
+    tiene_vto: {type: boolean}
+    lote_id: {type: integer(4)}
+  relations:
+    Compra: {type: one, local: compra_id, onDelete: CASCADE}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    Lote: {type: one, local: lote_id, onDelete: RESTRICT}
+    sfGuardUser: {type: one, local: usuario, onDelete: RESTRICT}
+Grupoprod:
+  connection: doctrine
+  tableName: grupoprod
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+    color: {type: string(7)}
+    foto: {type: string(255)}
+    foto_chica: {type: string(255)}
+    categoria_id: {type: integer(4)}
+  relations:
+    Productos: {type: many, class: Producto, local: id, foreign: grupoprod_id}
+    Categoria: {type: one, class: Categoria, local: categoria_id, foreign: id}
+Producto:
+  connection: doctrine
+  tableName: producto
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    codigo: {type: string(50)}
+    nombre: {type: string(100), notnull: true}
+    grupoprod_id: {type: integer(4)}
+    precio_vta: {type: 'decimal(10, 2)'}
+    moneda_id: {type: integer(4), notnull: true}
+    genera_comision: {type: boolean, default: 0}
+    mueve_stock: {type: boolean, default: 1}
+    minimo_stock: {type: integer(4)}
+    stock_actual: {type: integer(4)}
+    ctr_fact_grupo: {type: boolean, default: 1}
+    orden_grupo: {type: integer(4)}
+    activo: {type: boolean, default: 1}
+    grupo2: {type: integer(4)}
+    grupo3: {type: integer(4)}
+    lista_id: {type: integer(4)}
+    foto: {type: string(255)}
+    foto_chica: {type: string(255)}
+    descripcion: {type: text}
+  relations:
+    Grupo: {type: one, class: Grupoprod, local: grupoprod_id, onDelete: RESTRICT}
+    GrupoDos: {type: one, class: Grupoprod, local: grupo2, foreign: id, onDelete: RESTRICT}
+    GrupoTres: {type: one, class: Grupoprod, local: grupo3, foreign: id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+    Lista: {type: one, class: ListaPrecio, local: lista_id, foreign: id, onDelete: RESTRICT}
+Proveedor:
+  connection: doctrine
+  tableName: proveedor
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    cuit: {type: string(20)}
+    condicionfiscal_id: {type: integer(4), notnull: true}
+    razon_social: {type: string(100), notnull: true}
+    domicilio: {type: string(100)}
+    localidad_id: {type: integer(4)}
+    telefono: {type: string(100)}
+    email: {type: string(100)}
+    observacion: {type: string(200)}
+  relations:
+    Localidad: {type: one, local: localidad_id, onDelete: RESTRICT}
+    Compras: {type: many, class: Compra, local: id, foreign: proveedor_id}
+    Condfiscal: {type: one, class: CondicionFiscal, local: condicionfiscal_id, onDelete: RESTRICT}
+Venta:
+  connection: doctrine
+  tableName: venta
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    cliente_id: {type: integer(4), notnull: true}
+    resumen_id: {type: integer(4), notnull: true}
+    numero: {type: integer(4), notnull: true}
+    tipofactura_id: {type: integer(4), notnull: true}
+    fecha: {type: date(25), notnull: true}    
+    moneda_id: {type: integer(4), notnull: true}
+    observacion: {type: string(200)}
+  relations:
+    Resumen: {type: one, class: Resumen, local: resumen_id}
+    Detalle: {type: many, class: DetalleVenta, local: id, foreign: venta_id}
+    Tipofactura: {type: one, local: tipofactura_id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+DetalleVenta:
+  connection: doctrine
+  tableName: detalle_venta
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    venta_id: {type: integer(4), notnull: true}
+    producto_id: {type: integer(4), notnull: true}
+    precio: {type: 'decimal(10, 2)', notnull: true}
+    cantidad: {type: integer(4), notnull: true, default: 1}
+    subtotal: {type: 'decimal(10, 2)', notnull: true}
+    iva: {type: 'decimal(10, 2)', notnull: true}
+    total: {type: 'decimal(10, 2)'}
+    observacion: {type: string(200)}
+    nro_lote: {type: string(50)}
+  relations:
+    Venta: {type: one, class: Venta, local: venta_id, foreign: id, onDelete: CASCADE}
+    Producto: {type: one, class: Producto, local: producto_id, foreign: id, onDelete: RESTRICT}
+Resumen:
+  connection: doctrine
+  tableName: resumen
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    fecha: {type: date(25), notnull: true}
+    tipo_venta_id: {type: integer(4), notnull: true}
+    cliente_id: {type: integer(4), notnull: true}
+    remito_id: {type: integer(4)}
+    lista_id: {type: integer(4)}
+    moneda_id: {type: integer(4)}
+    observacion: {type: string(200)}
+    pagado: {type: integer(1)}
+    fecha_pagado: {type: date(25)}
+    pedido_id: {type: integer(4)}
+    nro_factura: {type: integer(4)}
+    tipofactura_id: {type: integer(4), notnull: true}
+    usuario: {type: integer(4)}
+    afip_estado: {type: integer(4)}
+    afip_cae: {type: string(255)}
+    afip_vto_cae: {type: date(25)}
+    pto_vta: {type: string(4)}
+    afip_envio: {type: string}
+    afip_respuesta: {type: string}
+    afip_mensaje: {type: string(255)}
+    pago_comision_id: {type: integer(4)}
+    zona_id: {type: integer(4)}
+  relations:
+    Detalle: {type: many, class: DetalleResumen, local: id, foreign: resumen_id}
+    Remito: {type: many, class: Resumen, local: remito_id, foreign: id}
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+    Venta: {type: one, class: Venta, local: id, foreign: resumen_id}
+    Cobros: {type: many, class: Cobro, local: id, foreign: resumen_id}
+    Compra: {type: many, class: Compra, local: id, foreign: remito_id}
+    Devueltos: {type: many, class: DevProducto, local: id, foreign: resumen_id}
+    PagoComision: {type: many, class: PagoComision, local: pago_comision_id, foreign: id}
+    Lista: {type: one, class: ListaPrecio, local: lista_id, foreign: id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+    TipoVenta: {type: one, class: TipoVenta, local: tipo_venta_id, foreign: id, onDelete: RESTRICT}
+    Pedido: {type: one, class: Pedido, local: pedido_id, foreign: id, onDelete: RESTRICT}
+    TipoFactura: {type: one, class: TipoFactura, local: tipofactura_id, foreign: id, onDelete: RESTRICT}
+    sfGuardUser: {type: one, local: usuario, onDelete: RESTRICT}
+    Zona: {type: one, local: zona_id, onDelete: RESTRICT}
+DetalleResumen:
+  connection: doctrine
+  tableName: detalle_resumen
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    resumen_id: {type: integer(4), notnull: true}
+    producto_id: {type: integer(4), notnull: true}
+    precio: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    cantidad: {type: integer(4), notnull: true, default: 1}
+    total: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    bonificados: {type: integer(1), notnull: true, default: 0}
+    observacion: {type: string(200)}
+    nro_lote: {type: string(255)}
+    fecha_vto: {type: date(25), notnull: true}
+    iva: {type: 'decimal(10, 2)', default: 0}
+    sub_total: {type: 'decimal(10, 2)', default: 0}
+    usuario: {type: integer(4)}
+    lista_id: {type: integer(4), notnull: true}
+    moneda_id: {type: integer(4), notnull: true}
+    cant_vend_remito: {type: integer(4)}
+    lote_id: {type: integer(4)}
+    det_remito_id: {type: integer(4)}
+    descuento: {type: integer(4)}
+  relations:
+    Resumen: {type: one, local: resumen_id, onDelete: CASCADE}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    sfGuardUser: {type: one, local: usuario, onDelete: RESTRICT}
+    Lote: {type: one, local: nro_lote, foreign: nro_lote, onDelete: RESTRICT}
+    Lista: {type: one, class: ListaPrecio, local: lista_id, foreign: id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+    Lote: {type: one, local: lote_id, onDelete: RESTRICT}
+    DetalleRemito: {type: one, class: DetalleResumen, local: det_remito_id, foreign: id, onDelete: RESTRICT}
+    VentasZona: {type: one, class: VentasZona, local: id, foreign: detalle_resumen_id, onDelete: RESTRICT}
+Localidad:
+  connection: doctrine
+  tableName: localidad
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+    provincia_id: {type: integer(4), notnull: true}
+    codigo_postal: {type: string(255)}
+  relations:
+    Provincia: {type: one, local: provincia_id, onDelete: RESTRICT}
+Provincia:
+  connection: doctrine
+  tableName: provincia
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(100), notnull: true}
+  relations:
+    Localidades: {type: many, class: Localidad, local: id, foreign: provincia_id}
+Cobro:
+  connection: doctrine
+  tableName: cobro
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    fecha: {type: date(25), notnull: true}
+    cliente_id: {type: integer(4), notnull: true}
+    resumen_id: {type: integer(4), notnull: true}
+    moneda_id: {type: integer(4), notnull: true, default: 1}
+    monto: {type: 'decimal(10, 2)', notnull: true, default: 1}
+    tipo_id: {type: integer(4), notnull: true}
+    banco_id: {type: integer(4)}
+    numero: {type: integer(4)}
+    fecha_vto: {type: date(25)}
+    devprod_id: {type: integer(4)}
+    observacion: {type: string(200)}
+    usuario: {type: integer(4)}
+    nro_recibo: {type: integer(4)}
+    zona_id: {type: integer(4)}
+    archivo: {type: string(255)}
+  relations:
+    Resumen: {type: one, local: resumen_id, onDelete: CASCADE}
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+    Tipo: {type: one, class: TipoCobroPago, local: tipo_id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+    Banco: {type: one, local: banco_id, onDelete: RESTRICT}
+    sfGuardUser: {type: one, local: usuario, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+CtaCte:
+  connection: doctrine
+  tableName: cta_cte
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    concepto: {type: string(200)}
+    numero: {type: integer(4)}
+    fecha: {type: date(25), notnull: true}
+    cliente_id: {type: integer(4), notnull: true}
+    moneda_id: {type: integer(4)}
+    debe: {type: 'decimal(10, 2)', notnull: true}
+    haber: {type: 'decimal(10, 2)', notnull: true}
+    observacion: {type: string(200)}
+  relations:
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+ListaPrecio:
+  connection: doctrine
+  tableName: lista_precio
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(100), notnull: true}
+    moneda_id: {type: integer(4), notnull: true}
+    aumento: {type: integer(4)}
+    descuento: {type: integer(4)}
+    precio: {type: 'decimal(10, 2)'}
+    defecto: {type: boolean, default: 1}
+    activo: {type: boolean, default: 1}
+  relations:
+    Detalle: {type: many, class: DetLisPrecio, local: id, foreign: lista_id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+DetLisPrecio:
+  connection: doctrine
+  tableName: det_lis_precio
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    lista_id: {type: integer(4), notnull: true}
+    producto_id: {type: integer(4)}
+    grupoprod_id: {type: integer(4)}
+    aumento: {type: integer(4)}
+    descuento: {type: integer(4)}
+    precio: {type: 'decimal(10, 2)'}
+  relations:
+    Lista: {type: one, class: ListaPrecio, local: lista_id, onDelete: RESTRICT}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    Grupo: {type: one, class: Grupoprod, local: grupoprod_id, onDelete: RESTRICT}
+ListadoVentas:
+  connection: doctrine
+  tableName: listado_ventas
+  columns:
+    id: {type: integer(4), primary: true}
+    resumen_id: {type: integer(4)}
+    cliente_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+    grupoprod_id: {type: integer(4)}
+    zona_id: {type: integer(4)}
+    fecha: {type: date(25)}
+    nro_lote: {type: string(50)}
+    cantidad: {type: integer(4)}
+    tipofactura_id: {type: integer(4)}
+    det_remito_id: {type: integer(4)}
+  relations:
+    DetalleResumen: {type: one, class: DetalleResumen, local: id}
+    Resumen: {type: one, class: Resumen, local: resumen_id}
+    Cliente: {type: one, class: Cliente, local: cliente_id}
+    Producto: {type: one, class: Producto, local: producto_id}
+    Grupo: {type: one, class: Grupoprod, local: grupoprod_id}
+    Zona: {type: one, class: Zona, local: zona_id}
+MovimientoProducto:
+  connection: doctrine
+  tableName: listado_ventas
+  columns:
+    id: {type: integer(4), primary: true}
+    resumen_id: {type: integer(4)}
+    cliente_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+    grupoprod_id: {type: integer(4)}
+    zona_id: {type: integer(4)}
+    fecha: {type: date(25)}
+    nro_lote: {type: string(50)}
+    cantidad: {type: integer(4)}
+    tipofactura_id: {type: integer(4)}
+    det_remito_id: {type: integer(4)}
+  relations:
+    DetalleResumen: {type: one, class: DetalleResumen, local: id}
+    Resumen: {type: one, class: Resumen, local: resumen_id}
+    Cliente: {type: one, class: Cliente, local: cliente_id}
+    Producto: {type: one, class: Producto, local: producto_id}
+    Grupo: {type: one, class: Grupoprod, local: grupoprod_id}
+    Zona: {type: one, class: Zona, local: zona_id}
+ListadoCobros:
+  connection: doctrine
+  tableName: listado_cobros
+  columns:
+    id: {type: integer(4), primary: true}
+    fecha: {type: date(25), notnull: true}
+    cliente: {type: integer(4)}
+    tipo_cliente: {type: integer(4)}
+    tipo_cobro: {type: integer(4)}
+    moneda: {type: integer(4)}
+    cli_gen_comis: {type: boolean}
+    monto: {type: 'decimal(10, 2)'}
+    zona_id: {type: integer(4)}
+  relations:
+    Cliente: {type: one, class: Cliente, local: cliente}
+    TipoCliente: {type: one, class: TipoCliente, local: tipo_cliente}
+    TipoCobro: {type: one, class: TipoCobroPago, local: tipo_cobro}
+    Moneda: {type: one, class: TipoMoneda, local: moneda, foreign: id, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+DevProducto:
+  connection: doctrine
+  tableName: dev_producto
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    fecha: {type: date(25), notnull: true}
+    cliente_id: {type: integer(4), notnull: true}
+    resumen_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+    cantidad: {type: integer(4)}
+    precio: {type: 'decimal(10, 2)'}
+    total: {type: 'decimal(10, 2)'}
+    observacion: {type: string(200)}
+    nro_lote: {type: string(255)}
+    iva: {type: 'decimal(10, 2)'}
+    usuario: {type: integer(4)}
+    afip_estado: {type: integer(4)}
+    afip_cae: {type: string(255)}
+    afip_vto_cae: {type: date(25)}
+    pto_vta: {type: string(4)}
+    tipofactura_id: {type: integer(4)}
+    nro_factura: {type: integer(4)}
+    afip_envio: {type: string}
+    afip_respuesta: {type: string}
+    lote_id: {type: integer(4)}
+    afip_mensaje: {type: string(255)}
+    zona_id: {type: integer(4)}
+    pago_comision_id: {type: integer(4)}
+  relations:
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+    Resumen: {type: one, local: resumen_id, onDelete: RESTRICT}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    TipoFactura: {type: one, class: TipoFactura, local: tipofactura_id, foreign: id, onDelete: RESTRICT}
+    sfGuardUser: {type: one, local: usuario, onDelete: RESTRICT}
+    Lote: {type: one, local: lote_id, onDelete: RESTRICT}
+    Zona: {type: one, local: zona_id, onDelete: RESTRICT}
+    PagoComision: {type: many, class: PagoComision, local: pago_comision_id, foreign: id}
+Presupuesto:
+  connection: doctrine
+  tableName: presupuesto
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    fecha: {type: date(25), notnull: true}
+    lista_id: {type: integer(4), notnull: true}
+    descripcion: {type: text}
+    zona_id: {type: integer(4)}
+    email: {type: string(100)}
+    telefono: {type: string(50)}
+  relations:
+    Lista: {type: one, class: ListaPrecio, local: lista_id, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+DetallePresupuesto:
+  connection: doctrine
+  tableName: detalle_presupuesto
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    presupuesto_id: {type: integer(4), notnull: true}
+    producto_id: {type: integer(4), notnull: true}
+    cantidad: {type: integer(4), notnull: true, default: 1}
+    precio: {type: 'decimal(10, 2)'}
+    total: {type: 'decimal(10, 2)'}
+    iva: {type: 'decimal(10, 2)', default: 0}
+    descuento: {type: integer(4)}
+    sub_total: {type: 'decimal(10, 2)'}
+  relations:
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    Presupuesto: {type: one, class: Presupuesto, local: presupuesto_id, onDelete: RESTRICT}
+CobroResumen:
+  connection: doctrine
+  tableName: cobro_resumen
+  columns:
+    cobro_id: {type: integer(4), primary: true}
+    resumen_id: {type: integer(4), primary: true}
+    monto: {type: 'decimal(10, 2)'}
+  relations:
+    Cobro: {type: one, local: cobro_id, onDelete: RESTRICT}
+    Resumen: {type: one, local: resumen_id, onDelete: RESTRICT}
+Pedido:
+  connection: doctrine
+  tableName: pedido
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    fecha: {type: date(25), notnull: true}
+    cliente_id: {type: integer(4), notnull: true}
+    observacion: {type: string(200)}
+    vendido: {type: integer(1), notnull: true, default: 0}
+    fecha_venta: {type: date(25), notnull: true}
+    direccion_entrega: {type: string(200)}
+    forma_envio: {type: integer(4), notnull: true}
+    finalizado: {type: integer(4), notnull: true}
+    cliente_domicilio_id: {type: integer(4)}
+    zona_id: {type: integer(4)}
+    usuario_id: {type: integer(4)}
+  relations:
+    Detalle: {type: many, class: DetallePedido, local: id, foreign: pedido_id}
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+    Zona: {type: one, local: zona_id, onDelete: RESTRICT}
+    Usuario: {type: one, local: usuario_id, onDelete: RESTRICT}
+DetallePedido:
+  connection: doctrine
+  tableName: detalle_pedido
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    pedido_id: {type: integer(4), notnull: true}
+    producto_id: {type: integer(4), notnull: true}
+    precio: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    cantidad: {type: integer(4), notnull: true, default: 1}
+    total: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    observacion: {type: string(200)}
+    nro_lote: {type: string(255)}
+    asignacion_lote: {type: string(255)}
+  relations:
+    Pedido: {type: one, local: pedido_id, onDelete: CASCADE}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+DetallePedidoOriginal:
+  connection: doctrine
+  tableName: detalle_pedido_original
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    pedido_id: {type: integer(4), notnull: true}
+    producto_id: {type: integer(4), notnull: true}
+    precio: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    cantidad: {type: integer(4), notnull: true, default: 1}
+    total: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    observacion: {type: string(200)}
+    nro_lote: {type: string(255)}
+    asignacion_lote: {type: string(255)}
+  relations:
+    Pedido: {type: one, local: pedido_id, onDelete: CASCADE}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+ProductoTraza:
+  connection: doctrine
+  tableName: producto_traza
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    resumen_id: {type: integer(4)}
+    fecha_venta: {type: date(25)}
+    cliente_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+    nro_lote: {type: string(50)}
+    fecha_vto: {type: date(25)}
+    vendidos: {type: integer(4)}
+    devueltos: {type: integer(4)}
+  relations:
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    Resumen: {type: one, local: resumen_id, onDelete: RESTRICT}
+Lote:
+  connection: doctrine
+  tableName: lote
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    producto_id: {type: integer(4)}
+    nro_lote: {type: string(255)}
+    stock: {type: integer(4)}
+    fecha_vto: {type: date(25)}
+    compra_id: {type: integer(4)}
+    observacion: {type: string(255)}
+    usuario_id: {type: integer(4)}
+    zona_id: {type: integer(4)}
+    activo: {type: integer(1)}
+    externo: {type: integer(1)}
+  relations:
+    Compra: {type: one, local: compra_id, onDelete: RESTRICT}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT} 
+    Usuario: {class: SfGuardUser, type: one, local: usuario_id, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+ClienteUltimaCompra:
+  connection: doctrine
+  tableName: cliente_ultima_compra
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    apellido: {type: string(50)}
+    nombre: {type: string(50)}
+    telefono: {type: string(50)}
+    email: {type: string(50)}
+    celular: {type: string(50)}
+    fecha: {type: date(25)}
+ListadoCompras:
+  connection: doctrine
+  tableName: listado_compras
+  columns:
+    id: {type: integer(4), primary: true}
+    compra_id: {type: integer(4)}
+    fecha: {type: date(25), notnull: true}
+    proveedor_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+    precio: {type: 'decimal(10, 2)'}
+    cantidad: {type: integer(4)}
+    total: {type: 'decimal(10, 2)'}
+    grupoprod_id: {type: integer(4)}
+    nro_lote: {type: string(255)}
+    zona_id: {type: integer(4)}
+  relations:
+    DetalleCompra: {type: one, class: DetalleCompra, local: id}
+    Compra: {type: one, class: Compra, local: compra_id}
+    Proveedor: {type: one, class: Proveedor, local: proveedor_id}
+    Producto: {type: one, class: Producto, local: producto_id}
+    Grupo: {type: one, class: Grupoprod, local: grupoprod_id}
+    Zona: {type: one, class: Zona, local: zona_id}
+ControlStock:
+  connection: doctrine
+  tableName: control_stock
+  columns:
+    id: {type: integer(4), primary: true}
+    producto_id: {type: integer(4)}
+    nombre: {type: string(50)}
+    grupoprod_id: {type: integer(4)}
+    nro_lote: {type: string(255)}
+    zona_id: {type: integer(4)}
+    comprados: {type: integer(4)}
+    vendidos: {type: integer(4)}
+    cant_dev: {type: integer(4)}
+    stock_guardado: {type: integer(4)}
+    minimo_stock: {type: integer(4)}
+    ult_venta: {type: date(25)}
+  relations:
+    Producto: {type: one, class: Producto, local: producto_id}
+    Grupo: {type: one, class: Grupoprod, local: grupoprod_id, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+ClienteSeguimiento:
+  connection: doctrine
+  tableName: cliente_seguimiento
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    cliente_id: {type: integer(4), notnull: true}
+    fecha: {type: date(25), notnull: true}
+    hora: {type: string(5), notnull: true}
+    tipo_contacto_id: {type: integer(1), notnull: true}
+    tipo_respuesta_id: {type: integer(1), notnull: true}
+    comentario: {type: string(255)}
+    prox_contac_fecha: {type: date(25)}
+    prox_contac_hora: {type: string(5)}
+    prox_contac_tiempo: {type: integer(1)}    
+    prox_contact_coment: {type: string(255)}
+    usuario: {type: string(50)}
+    motivo_id: {type: integer(1)}
+    realizada: {type: integer(1)}
+  relations:
+    Cliente: {type: one, class: Cliente, local: cliente_id}
+    TipoMotivo: {type: one, class: TipoMotivo, local: motivo_id}
+    TipoContacto: {type: one, class: TipoContacto, local: tipo_contacto_id}
+    TipoRespuesta: {type: one, class: TipoRespuesta, local: tipo_respuesta_id}
+    TipoTiempoContac: {type: one, class: TipoTiempoContac, local: prox_contac_tiempo}
+    sfGuardUser: {type: one, local: usuario, onDelete: RESTRICT}
+Curso:
+  connection: doctrine
+  tableName: curso
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(100), notnull: true}
+    descripcion: {type: string()}
+    fecha: {type: date(25), notnull: true}
+    hora: {type: string(5), notnull: true}
+    lugar: {type: string(255)}
+    precio: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    mostrar_precio: {type: string(2), fixed: true, default: SI, notnull: true}
+    logo: {type: string(255)}
+    link_mapa: {type: string()}
+    sitio_web: {type: string(255)}
+    ini_insc: {type: date(25), notnull: true}
+    fin_insc: {type: date(25), notnull: true}
+    habilitado: {type: string(2), fixed: true, default: SI, notnull: true}
+    permite_insc: {type: string(2), fixed: true, default: SI, notnull: true}
+    foto1: {type: string(255)}
+    foto2: {type: string(255)}
+    foto3: {type: string(255)}
+    foto4: {type: string(255)}
+CursoInscripcion:
+  connection: doctrine
+  tableName: curso_inscripcion
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    curso_id: {type: integer(4), notnull: true}
+    cliente_id: {type: integer(4), notnull: true}
+    nombre: {type: string(100)}
+    correo: {type: string(100)}
+    es_cliente: {type: string(2)}
+    fecha: {type: date(25), notnull: true}
+    tipo_insc_id: {type: integer(4), notnull: true}    
+    comentario: {type: string(255)}
+    asistio: {type: string(2)}
+    pago_monto: {type: 'decimal(10, 2)', notnull: true, default: 0}
+    mas_info: {type: string(2)}
+    compro: {type: string(2)}
+    observacion: {type: string(255)}
+  relations:
+    Cliente: {type: one, class: Cliente, local: cliente_id}
+    Curso: {type: one, class: Curso, local: curso_id}
+    TipoInscripcion: {type: one, class: TipoInscripcion, local: tipo_insc_id}
+TipoContacto:
+  connection: doctrine
+  tableName: tipo_contacto
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+TipoRespuesta:
+  connection: doctrine
+  tableName: tipo_respuesta
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+TipoTiempoContac:
+  connection: doctrine
+  tableName: tipo_tiempo_contac
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+TipoInscripcion:
+  connection: doctrine
+  tableName: tipo_inscripcion
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+TipoMotivo:
+  connection: doctrine
+  tableName: tipo_motivo
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(50), notnull: true}
+CursoMailEnviado:
+  connection: doctrine
+  tableName: curso_mail_enviado
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    curso_id: {type: integer(4), notnull: true}
+    fecha: {type: date(25), notnull: true}
+    e_mail: {type: string(100)}
+    lo_vio: {type: string(2)}
+    se_inscribio: {type: string(2)}
+    observacion: {type: string(255)}
+  relations:
+    Curso: {type: one, class: Curso, local: curso_id}
+ClienteSaldo:
+  connection: doctrine
+  tableName: cliente_saldo
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    apellido: {type: string(50)}
+    nombre: {type: string(50)}
+    moneda_id: {type: integer(4)}
+    saldo: {type: 'decimal(10, 2)', notnull: true}
+    zona_id: {type: integer(4)}
+  relations:
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, foreign: id, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+ListaPrecioDetalle:
+  connection: doctrine
+  tableName: lista_precio_detalle
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    lista_id: {type: integer(4)}
+    nombre: {type: string(255)}
+    moneda_id: {type: integer(4)}
+    grupo_id: {type: integer(4)}
+    producto_grupo_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+    precio: {type: 'decimal(10, 2)'}
+  relations:
+    Producto: {type: one, class: Producto, local: producto_id, onDelete: RESTRICT}
+    ProductoGrupo: {type: one, class: Producto, local: producto_grupo_id, onDelete: RESTRICT}
+    Grupo: {type: one, class: Grupoprod, local: grupo_id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, onDelete: RESTRICT}
+FacturasAfip:
+  connection: doctrine
+  tableName: facturas_afip
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    tipofactura_id: {type: integer(4)}
+    pto_vta: {type: string(255)}
+    nro_factura: {type: integer(4)}
+    fecha: {type: date(25)}
+    cliente_id: {type: integer(4)}
+    cae: {type: string(255)}
+    iva: {type: 'decimal(10, 2)'}
+    neto: {type: 'decimal(10, 2)'}
+    total: {type: 'decimal(10, 2)'}
+    cliente: {type: string(255)}
+    zona_id: {type: integer(4)}
+  relations:
+    TipoFactura: {type: one, class: TipoFactura, local: tipofactura_id, onDelete: RESTRICT}
+    Cliente: {type: one, class: Cliente, local: cliente_id, onDelete: RESTRICT}
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+Zona:
+  connection: doctrine
+  tableName: zona
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    nombre: {type: string(255)}
+    cliente_id: {type: integer(4), notnull: true}
+  relations:
+    Cliente: {type: one, class: Cliente, local: cliente_id}
+UsuarioZona:
+  connection: doctrine
+  tableName: usuario_zona
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    zona_id: {type: integer(4)}
+    usuario: {type: integer(4)}
+  relations:
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+    Usuario: {type: one, class: sfGuardUser, local: usuario}
+DescuentoZona:
+  connection: doctrine
+  tableName: descuento_zona
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    producto_id: {type: integer(4)}
+    grupoprod_id: {type: integer(4)}
+    porc_desc: {type: integer(4)}
+    precio_desc: {type: integer(4)}
+    zona_id: {type: integer(4)}
+  relations:
+    Zona: {type: one, class: Zona, local: zona_id, onDelete: RESTRICT}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    Grupoprod: {type: one, local: grupoprod_id, onDelete: RESTRICT}
+VentasZona:
+  connection: doctrine
+  tableName: ventas_zona
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    detalle_resumen_id: {type: integer(4)}
+    resumen_id: {type: integer(4)}
+    fecha: {type: date(25)}
+    producto_id: {type: integer(4)}
+    grupoprod_id: {type: integer(4)}
+    nro_lote: {type: string(255)}
+    cliente_id: {type: integer(4)}
+    zona_id: {type: integer(4)}
+    prod_porc_desc: {type: integer(4)}
+    grupo_porc_desc: {type: integer(4)}
+    prod_precio_desc: {type: integer(4)}
+    grupo_precio_desc: {type: integer(4)}
+    cobrado: {type: boolean}
+    fecha_cobrado: {type: date(25)}
+    pago_comision_id: {type: integer(4)}
+    pagado: {type: boolean}
+  relations:
+    Zona: {type: one, local: zona_id, onDelete: RESTRICT}
+    Producto: {type: one, local: producto_id, onDelete: RESTRICT}
+    Cliente: {type: one, local: cliente_id, onDelete: RESTRICT}
+    Resumen: {type: one, local: resumen_id, onDelete: RESTRICT}
+    DetalleResumen: {type: one, class: DetalleResumen, local: detalle_resumen_id, onDelete: RESTRICT}
+    Grupo: {type: one, class: Grupoprod, local: grupoprod_id, onDelete: RESTRICT}
+PagoComision:
+  connection: doctrine
+  tableName: pago_comision
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    fecha: {type: date(25), notnull: true}
+    revendedor_id: {type: integer(4), notnull: true}
+    moneda_id: {type: integer(4), notnull: true, default: 1}
+    monto: {type: 'decimal(10, 2)', notnull: true, default: 1}
+    tipo_id: {type: integer(4), notnull: true}
+    banco_id: {type: integer(4)}
+    referencia: {type: string(50)}
+    fecha_vto: {type: date(25)}
+    observacion: {type: string(200)}
+    nro_recibo: {type: integer(4)}
+  relations:
+    Revendedor: {type: one, class: Cliente, local: revendedor_id, onDelete: RESTRICT}
+    Tipo: {type: one, class: TipoCobroPago, local: tipo_id, onDelete: RESTRICT}
+    Moneda: {type: one, class: TipoMoneda, local: moneda_id, onDelete: RESTRICT}
+    Banco: {type: one, class: Banco, local: banco_id, onDelete: RESTRICT}
+Configuracion:
+  connection: doctrine
+  tableName: configuracion
+  columns:
+    id: {type: string(200), primary: true}
+    valor: {type: string(50)}
+    observacion: {type: string(200)}
+ClienteDomicilio:
+  connection: doctrine
+  tableName: cliente_domicilio
+  columns:
+    id: {type: integer(4), primary: true, autoincrement: true}
+    cliente_id: {type: integer(4), notnull: true}
+    direccion: {type: string(255)}
+    telefono: {type: string(255)}
+    correo: {type: string(255)}
+    observacion: {type: string(200)}
+    localidad_id: {type: integer(4)}
+  relations:
+    Cliente: {type: one, class: Cliente, local: cliente_id, onDelete: RESTRICT}
+    Localidad: {type: one, class: Localidad, local: localidad_id, onDelete: RESTRICT}
+Promocion:
+  connection: doctrine
+  tableName: promocion
+  columns:
+    id: {type: integer(4), primary: true}
+    nombre: {type: string(255)}
+    descripcion: {type: string(255)}
+    estado: {type: integer(1), notnull: true, default: 0}
+    fecha_ini: {type: date(25)}
+    fecha_fin: {type: date(25)}
+    tipo_id: {type: integer(1)}
+    min_cant: {type: integer(4)}
+    cant_regalo: {type: integer(4)}
+    porc_desc: {type: integer(1)}
+    aplica_neto: {type: integer(1)}
+    lista_id: {type: integer(4)}
+  relations:
+    Lista: {type: one, class: Lista, local: lista_id, onDelete: RESTRICT}
+    Productos: {type: many, class: PromocionProducto, local: id, foreign: promocion_id}
+    Regalos: {type: many, class: PromocionRegalo, local: id, foreign: promocion_id}
+PromocionProducto:
+  connection: doctrine
+  tableName: promocion_producto
+  columns:
+    id: {type: integer(4), primary: true}
+    promocion_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+  relations:
+    Promocion: {type: one, class: Promocion, local: promocion_id, onDelete: RESTRICT}
+    Producto: {type: one, class: Producto, local: producto_id, onDelete: RESTRICT}
+PromocionRegalo:
+  connection: doctrine
+  tableName: promocion_regalo
+  columns:
+    id: {type: integer(4), primary: true}
+    promocion_id: {type: integer(4)}
+    producto_id: {type: integer(4)}
+  relations:
+    Promocion: {type: one, class: Promocion, local: promocion_id, onDelete: RESTRICT}
+    Producto: {type: one, class: Producto, local: producto_id, onDelete: RESTRICT}
+Categoria:
+  connection: doctrine
+  tableName: categoria
+  columns:
+    id: {type: integer(4), primary: true}
+    nombre: {type: string(255)}
+  relations:
+    Grupos: {type: many, class: Grupoprod, local: id, onDelete: RESTRICT}
